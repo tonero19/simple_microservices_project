@@ -11,7 +11,7 @@ terraform {
 
  # Add this block to lock your state to your free Terraform Cloud account
   backend "remote" {
-    organization = "Tonero_first_organization" # <-- Change to your TF Cloud Org name
+    organization = "Tonero_first_organization"
 
     workspaces {
       name = "simple-microservices"
