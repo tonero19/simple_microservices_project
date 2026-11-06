@@ -8,7 +8,6 @@ terraform {
       version = "~> 1.9.0"
     }
   }
-}
 
  # Add this block to lock your state to your free Terraform Cloud account
   backend "remote" {
