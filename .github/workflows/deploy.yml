@@ -28,6 +28,7 @@ jobs:
       - name: Terraform Init & Apply
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_OWNER_ID: ${{ secrets.RENDER_OWNER_ID }}
         run: |
           cd terraform
           terraform init
