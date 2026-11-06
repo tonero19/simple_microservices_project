@@ -1,0 +1,20 @@
+server:
+  port: 8081 # Unique local port for product service
+
+spring:
+  application:
+    name: product-service
+
+  # Connect to the cloud DB if vars are provided; otherwise fall back to a safe placeholder
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:productdb}
+    username: ${SPRING_DATASOURCE_USER:sa}
+    password: ${SPRING_DATASOURCE_PASS:}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

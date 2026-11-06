@@ -1,0 +1,23 @@
+server:
+  port: 8082 # Unique local port to prevent port conflicts with product service
+
+spring:
+  application:
+    name: order-service
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:orderdb}
+    username: ${SPRING_DATASOURCE_USER:sa}
+    password: ${SPRING_DATASOURCE_PASS:}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Custom variable injected by Terraform to allow order-service to communicate with product-service
+product-service:
+  url: ${PRODUCT_SERVICE_URL:http://localhost:8081}
