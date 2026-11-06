@@ -65,3 +65,15 @@ resource "render_web_service" "order_service" {
     "PRODUCT_SERVICE_URL"    = { value = render_web_service.product_service.url }
   }
 }
+
+# Output the live URLs directly to your console
+output "product_service_public_url" {
+  value       = render_web_service.product_service.url
+  description = "The public URL of the Product Microservice"
+}
+
+output "order_service_public_url" {
+  value       = render_web_service.order_service.url
+  description = "The public URL of the Order Microservice"
+}
+
