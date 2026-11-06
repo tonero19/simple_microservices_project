@@ -10,6 +10,16 @@ terraform {
   }
 }
 
+ # Add this block to lock your state to your free Terraform Cloud account
+  backend "remote" {
+    organization = "Tonero_first_organization" # <-- Change to your TF Cloud Org name
+
+    workspaces {
+      name = "simple-microservices"
+    }
+  }
+}
+
 provider "render" {
   # Automatically handled via RENDER_API_KEY GitHub Secret
 }
