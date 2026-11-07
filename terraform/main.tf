@@ -33,6 +33,27 @@ resource "neon_project" "ecommerce_db" {
   region_id = "aws-us-west-2"
 }
 
+# Create a default database inside the project
+resource "neon_database" "main_db" {
+  project_id = neon_project.ecommerce_db.id
+  branch_id  = neon_project.ecommerce_db.default_branch_id
+  name       = "main"
+}
+
+# Create a master user role for your Spring Boot applications
+resource "neon_role" "db_user" {
+  project_id = neon_project.ecommerce_db.id
+  branch_id  = neon_project.ecommerce_db.default_branch_id
+  name       = "db_admin"
+}
+
+# Fetch the computed connection endpoint host address details
+resource "neon_endpoint" "db_endpoint" {
+  project_id = neon_project.ecommerce_db.id
+  branch_id  = neon_project.ecommerce_db.default_branch_id
+  type       = "read_write"
+}
+
 provider "render" {
   # Automatically handled via RENDER_API_KEY GitHub Secret
 }
@@ -59,10 +80,10 @@ resource "render_web_service" "product_service" {
     "SERVER_PORT"            = { value = "8081" }
     "JVM_OPTS"               = { value = "-XX:+UseSerialGC -Xss512k -Xms128m -Xmx256m" }
 
-    # Dynamically inject the newly provisioned true Postgres connection string keys!
-    "SPRING_DATASOURCE_URL"  = { value = "jdbc:postgresql://${neon_project.ecommerce_db.host}/main?sslmode=require" }
-    "SPRING_DATASOURCE_USER" = { value = neon_project.ecommerce_db.username }
-    "SPRING_DATASOURCE_PASS" = { value = neon_project.ecommerce_db.password }
+    # Clean mapping using explicit computed provider outputs
+    "SPRING_DATASOURCE_URL"  = { value = "jdbc:postgresql://${neon_endpoint.db_endpoint.host}/${neon_database.main_db.name}?sslmode=require" }
+    "SPRING_DATASOURCE_USER" = { value = neon_role.db_user.name }
+    "SPRING_DATASOURCE_PASS" = { value = neon_role.db_user.password }
   }
 }
 
@@ -86,10 +107,9 @@ resource "render_web_service" "order_service" {
     "SERVER_PORT"            = { value = "8082" }
     "JVM_OPTS"               = { value = "-XX:+UseSerialGC -Xss512k -Xms128m -Xmx256m" }
 
-    # Dynamically inject the newly provisioned true Postgres connection string keys!
-    "SPRING_DATASOURCE_URL"  = { value = "jdbc:postgresql://${neon_project.ecommerce_db.host}/main?sslmode=require" }
-    "SPRING_DATASOURCE_USER" = { value = neon_project.ecommerce_db.username }
-    "SPRING_DATASOURCE_PASS" = { value = neon_project.ecommerce_db.password }
+    "SPRING_DATASOURCE_URL"  = { value = "jdbc:postgresql://${neon_endpoint.db_endpoint.host}/${neon_database.main_db.name}?sslmode=require" }
+    "SPRING_DATASOURCE_USER" = { value = neon_role.db_user.name }
+    "SPRING_DATASOURCE_PASS" = { value = neon_role.db_user.password }
 
     # Securely maps your product microservice network endpoint address
     "PRODUCT_SERVICE_URL"    = { value = render_web_service.product_service.url }
