@@ -38,6 +38,7 @@ resource "neon_database" "main_db" {
   project_id = neon_project.ecommerce_db.id
   branch_id  = neon_project.ecommerce_db.default_branch_id
   name       = "main"
+  owner_name = neon_role.db_user.name
 }
 
 # Create a master user role for your Spring Boot applications
