@@ -34,7 +34,7 @@ resource "neon_project" "ecommerce_db" {
 
    # Supply your Neon organization ID right here to satisfy the API check
    org_id    = "org-floral-dust-69666643"
-
+}
 
 # Create a default database inside the project
 resource "neon_database" "main_db" {
