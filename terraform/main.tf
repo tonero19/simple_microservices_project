@@ -62,6 +62,7 @@ resource "render_web_service" "product_service" {
     "JVM_OPTS"               = { value = "-XX:+UseSerialGC -Xss512k -Xms128m -Xmx256m" }
 
     # Clean mapping using explicit computed provider outputs
+    "SPRING_DATASOURCE_DRIVER" = { value = "org.postgresql.Driver" }
     "SPRING_DATASOURCE_URL"  = { value = "jdbc:postgresql://${neon_project.ecommerce_db.database_host}/${neon_project.ecommerce_db.database_name}?sslmode=require" }
     "SPRING_DATASOURCE_USER" = { value = neon_project.ecommerce_db.database_user }
     "SPRING_DATASOURCE_PASS" = { value = neon_project.ecommerce_db.database_password }
@@ -88,6 +89,7 @@ resource "render_web_service" "order_service" {
     "SERVER_PORT"            = { value = "8082" }
     "JVM_OPTS"               = { value = "-XX:+UseSerialGC -Xss512k -Xms128m -Xmx256m" }
 
+    "SPRING_DATASOURCE_DRIVER" = { value = "org.postgresql.Driver" }
     "SPRING_DATASOURCE_URL"  = { value = "jdbc:postgresql://${neon_project.ecommerce_db.database_host}/${neon_project.ecommerce_db.database_name}?sslmode=require" }
     "SPRING_DATASOURCE_USER" = { value = neon_project.ecommerce_db.database_user }
     "SPRING_DATASOURCE_PASS" = { value = neon_project.ecommerce_db.database_password }
