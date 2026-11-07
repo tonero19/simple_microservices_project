@@ -7,6 +7,10 @@ terraform {
       source  = "render-oss/render"
       version = "~> 1.9.0"
     }
+    neon = {
+      source  = "kislerdm/neon"
+      version = "~> 0.2.0"
+    }
   }
 
  # Add this block to lock your state to your free Terraform Cloud account
@@ -17,6 +21,16 @@ terraform {
       name = "simple-microservices"
     }
   }
+}
+
+provider "neon" {
+  # Injected securely via NEON_API_KEY environment variable in Terraform Cloud
+}
+
+# Create a Free Neon Project
+resource "neon_project" "ecommerce_db" {
+  name      = "ecommerce-database"
+  region_id = "aws-us-west-2"
 }
 
 provider "render" {
@@ -44,9 +58,11 @@ resource "render_web_service" "product_service" {
     "SPRING_PROFILES_ACTIVE" = { value = "prod" }
     "SERVER_PORT"            = { value = "8081" }
     "JVM_OPTS"               = { value = "-XX:+UseSerialGC -Xss512k -Xms128m -Xmx256m" }
-    "SPRING_DATASOURCE_URL"  = { value = "" }
-    "SPRING_DATASOURCE_USER" = { value = "" }
-    "SPRING_DATASOURCE_PASS" = { value = "" }
+
+    # Dynamically inject the newly provisioned true Postgres connection string keys!
+    "SPRING_DATASOURCE_URL"  = { value = "jdbc:postgresql://${neon_project.ecommerce_db.host}/main?sslmode=require" }
+    "SPRING_DATASOURCE_USER" = { value = neon_project.ecommerce_db.username }
+    "SPRING_DATASOURCE_PASS" = { value = neon_project.ecommerce_db.password }
   }
 }
 
@@ -69,6 +85,11 @@ resource "render_web_service" "order_service" {
     "SPRING_PROFILES_ACTIVE" = { value = "prod" }
     "SERVER_PORT"            = { value = "8082" }
     "JVM_OPTS"               = { value = "-XX:+UseSerialGC -Xss512k -Xms128m -Xmx256m" }
+
+    # Dynamically inject the newly provisioned true Postgres connection string keys!
+    "SPRING_DATASOURCE_URL"  = { value = "jdbc:postgresql://${neon_project.ecommerce_db.host}/main?sslmode=require" }
+    "SPRING_DATASOURCE_USER" = { value = neon_project.ecommerce_db.username }
+    "SPRING_DATASOURCE_PASS" = { value = neon_project.ecommerce_db.password }
 
     # Securely maps your product microservice network endpoint address
     "PRODUCT_SERVICE_URL"    = { value = render_web_service.product_service.url }
