@@ -9,7 +9,7 @@ terraform {
     }
     neon = {
       source  = "kislerdm/neon"
-      version = "~> 0.2.0"
+      version = "~> 0.18.0"
     }
   }
 
@@ -31,9 +31,6 @@ provider "neon" {
 resource "neon_project" "ecommerce_db" {
   name      = "ecommerce-database"
   region_id = "aws-us-west-2"
-
-  # Structural context variable mapping instead of top-level org_id
-  history_organization_id = "org-floral-dust-69666643"
 }
 
 # Create a default database inside the project
