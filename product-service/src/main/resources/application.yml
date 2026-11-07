@@ -7,7 +7,7 @@ spring:
 
   # Connect to the cloud DB if vars are provided; otherwise fall back to a safe placeholder
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:productdb}
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:productdb;MODE=PostgreSQL}
     username: ${SPRING_DATASOURCE_USER:sa}
     password: ${SPRING_DATASOURCE_PASS:}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}

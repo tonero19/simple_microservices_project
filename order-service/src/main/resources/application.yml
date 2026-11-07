@@ -6,7 +6,7 @@ spring:
     name: order-service
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:orderdb}
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:orderdb;MODE=PostgreSQL}
     username: ${SPRING_DATASOURCE_USER:sa}
     password: ${SPRING_DATASOURCE_PASS:}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
