@@ -35,28 +35,6 @@ resource "neon_project" "ecommerce_db" {
     history_retention_seconds = 21600
 }
 
-# Create a default database inside the project
-resource "neon_database" "main_db" {
-  project_id = neon_project.ecommerce_db.id
-  branch_id  = neon_project.ecommerce_db.default_branch_id
-  name       = "main"
-  owner_name = neon_role.db_user.name
-}
-
-# Create a master user role for your Spring Boot applications
-resource "neon_role" "db_user" {
-  project_id = neon_project.ecommerce_db.id
-  branch_id  = neon_project.ecommerce_db.default_branch_id
-  name       = "db_admin"
-}
-#
-# # Fetch the computed connection endpoint host address details
-# resource "neon_endpoint" "db_endpoint" {
-#   project_id = neon_project.ecommerce_db.id
-#   branch_id  = neon_project.ecommerce_db.default_branch_id
-#   type       = "read_write"
-# }
-
 provider "render" {
   # Automatically handled via RENDER_API_KEY GitHub Secret
 }
